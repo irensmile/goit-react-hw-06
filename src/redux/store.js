@@ -9,7 +9,7 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from "redux-persist/es/persistStore";
+} from "redux-persist";
 
 export const store = configureStore({
   reducer: {
