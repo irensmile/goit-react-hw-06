@@ -1,7 +1,9 @@
-import { Formik, Form, Field } from 'formik';
-import { nanoid } from 'nanoid';
-import css from './ContactForm.module.css';
-import { object, string } from 'yup';
+import { Formik, Form, Field } from "formik";
+import { nanoid } from "nanoid";
+import css from "./ContactForm.module.css";
+import { object, string } from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import { addContact } from "../../redux/contactsSlice";
 
 // Form validation schema
 const FormValidationSchema = object({
@@ -9,19 +11,31 @@ const FormValidationSchema = object({
   number: string().required().min(3).max(50),
 });
 
-export const ContactForm = ({ onAdd }) => {
+export const ContactForm = () => {
   const nameFieldId = nanoid();
   const nameNumberId = nanoid();
+  const contactList = useSelector((state) => state.contacts.items);
+  const dispatch = useDispatch();
 
   const handleSubmit = (values, actions) => {
     const { name, number } = values;
-    onAdd({ id: nanoid(), name: name, number: number });
+    const newContact = { id: nanoid(), name: name, number: number };
+    if (
+      contactList.some(
+        (contact) =>
+          contact.name.toLowerCase() === newContact.name.toLowerCase()
+      )
+    ) {
+      alert(`${newContact.name} is already in contacts`);
+      return;
+    }
+    dispatch(addContact(newContact));
     actions.resetForm();
   };
 
   return (
     <Formik
-      initialValues={{ name: '', number: '' }}
+      initialValues={{ name: "", number: "" }}
       onSubmit={handleSubmit}
       validationSchema={FormValidationSchema}
     >
