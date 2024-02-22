@@ -4,6 +4,7 @@ import css from "./ContactForm.module.css";
 import { object, string } from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { addContact } from "../../redux/contactsSlice";
+import { getContactsSelector } from "../../redux/selectors";
 
 // Form validation schema
 const FormValidationSchema = object({
@@ -14,7 +15,7 @@ const FormValidationSchema = object({
 export const ContactForm = () => {
   const nameFieldId = nanoid();
   const nameNumberId = nanoid();
-  const contactList = useSelector((state) => state.contacts.items);
+  const contactList = useSelector(getContactsSelector);
   const dispatch = useDispatch();
 
   const handleSubmit = (values, actions) => {
